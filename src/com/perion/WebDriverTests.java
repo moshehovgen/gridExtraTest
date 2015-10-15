@@ -20,21 +20,20 @@ import org.openqa.selenium.safari.SafariDriver;
 
 public class WebDriverTests {
 
-	public final String hubUrl = "http://172.16.32.9";
-	private final String hubPort = "4444";
-	private final String webHub = "wd/hub";
-	private DesiredCapabilities capability = DesiredCapabilities.firefox();
+	public static String hubUrl = "http://172.16.32.9";
+	private static final String hubPort = "4444";
+	private static final String webHub = "wd/hub";
+	private static DesiredCapabilities capability = DesiredCapabilities.chrome();
 	
-	private WebDriver driver;
+	private static WebDriver driver;
 
-	@Before
-	public void setUp() {
+	static{
 		try {
 			//capability.setBrowserName("firefox");
 			//capability.setPlatform(Platform.WINDOWS);
 			//capability.setVersion("41.0.1");
 			
-			String hubUrl = this.hubUrl + ":" + hubPort + "/" + webHub;
+			hubUrl = hubUrl + ":" + hubPort + "/" + webHub;
 			URL hubURL = new URL(hubUrl);
 			System.out.println("hubUrl " + hubUrl);
 			driver = new RemoteWebDriver(hubURL, capability);
@@ -45,7 +44,10 @@ public class WebDriverTests {
 			System.out.println(e.getMessage());
 		}
 	}
-
+	public static void main(String[] args) {
+		navigateToGooglePageSearchATermAndNavigateToFirstResult();
+		driver.quit();
+	}
 	public WebDriver initWebDriver() {
 		WebDriver driver;
 		DesiredCapabilities capabilities = null;
@@ -101,8 +103,8 @@ public class WebDriverTests {
 		driver.quit();
 	}
 
-	@Test
-	public void navigateToGooglePageSearchATermAndNavigateToFirstResult() {
+	
+	public static void navigateToGooglePageSearchATermAndNavigateToFirstResult() {
 		System.out.println("navigate To Google Page Search A Term And Navigate To First Result");
 		GoogleWebSite webSite = new GoogleWebSite(driver);
 		System.out.println("before navigation");
@@ -115,15 +117,26 @@ public class WebDriverTests {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try{
 		List<WebElement> results = webSite.searchATermAndgetResults("hovagen");
 		System.out.println("after searchATermAndgetResults fun");
 		System.out.println("after click On First Result fun");
 		webSite.clickOnResult(results.get(0));
 		System.out.println("after click On First Result fun");
-
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}finally{
+			try {
+				Thread.sleep(30000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			driver.quit();
+		}
 	}
 
-	@Test
+	
 	public void navigateToGooglePageSearchATermAndNavigateToSecondResult() {
 		System.out.println("navigate To Google Page Search A Term And Navigate To Second Result");
 		GoogleWebSite webSite = new GoogleWebSite(driver);
@@ -145,7 +158,7 @@ public class WebDriverTests {
 
 	}
 
-	@Test
+
 	public void navigateToGooglePageSearchATermAndNavigateToLastResult() {
 		System.out.println("navigate To Google Page Search A Term And Navigate To Last Result");
 		GoogleWebSite webSite = new GoogleWebSite(driver);
